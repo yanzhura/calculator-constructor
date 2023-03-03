@@ -2,21 +2,13 @@ import React from 'react';
 import { useDrop } from 'react-dnd/dist/hooks/useDrop';
 import { elementTypes } from '../../App.types';
 import * as S from './Canvas.styles';
-
-interface ICanvasProps {
-    children?: React.ReactNode;
-}
+import type { ICanvasProps, IItem } from './Canvas.types';
 
 const Canvas: React.FC<ICanvasProps> = ({ children }) => {
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [, drop] = useDrop(() => ({
         accept: [elementTypes.DISPLAY, elementTypes.KEYBOARD],
-        drop: () => console.log('dropped !'),
-        collect: (monitor) => ({
-            isOver: !!monitor.isOver()
-        })
+        drop: (item: IItem) => console.log('item :>> ', item.kind)
     }));
-
-    console.log('isOver :>> ', isOver);
 
     return <S.Wrapper ref={drop}>{children}</S.Wrapper>;
 };

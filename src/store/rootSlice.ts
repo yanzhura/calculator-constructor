@@ -10,8 +10,14 @@ const initialState: IRootSlice = {
 const rootSlice = createSlice({
     name: 'calculator',
     initialState,
-    reducers: {}
+    reducers: {
+        dropToCanvas: (state, action) => {
+            state.canvas.push(action.payload);
+        }
+    }
 });
 
 const rootReducer = rootSlice.reducer;
+export const { dropToCanvas } = rootSlice.actions;
+
 export default rootReducer;
