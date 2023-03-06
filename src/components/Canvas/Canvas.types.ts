@@ -3,5 +3,5 @@ export interface ICanvasProps {
 }
 
 export interface IItem {
-    kind: string;
+    type: string;
 }

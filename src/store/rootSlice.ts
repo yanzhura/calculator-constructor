@@ -3,7 +3,7 @@ import { elementTypes } from '../App.types';
 import type { IRootSlice } from './rootSlice.types';
 
 const initialState: IRootSlice = {
-    sidebar: [elementTypes.DISPLAY, elementTypes.KEYBOARD],
+    sidebar: [elementTypes.DISPLAY, elementTypes.OPERATORS, elementTypes.KEYBOARD, elementTypes.EQUALS],
     canvas: []
 };
 
@@ -12,7 +12,11 @@ const rootSlice = createSlice({
     initialState,
     reducers: {
         dropToCanvas: (state, action) => {
-            state.canvas.push(action.payload);
+            const isCanvasFull = !(state.canvas.length < 4);
+            const isAlreadyDropped = state.canvas.includes(action.payload);
+            if (!isCanvasFull && !isAlreadyDropped) {
+                state.canvas.push(action.payload);
+            }
         }
     }
 });
