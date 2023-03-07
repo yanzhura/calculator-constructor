@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd/dist/hooks';
 import { elementTypes, IItem, TGetComponent } from '../../App.types';
 import useAppDispatch from '../../hooks/use-app-dispatch';
-import { sortCanvas } from '../../store/rootSlice';
+import { saveDndParams } from '../../store/rootSlice';
 import Display from '../Calculator/Display/Display';
 import Equals from '../Calculator/Equals/Equals';
 import Keyboard from '../Calculator/Keyboard/Keyboard';
@@ -58,9 +58,9 @@ const Dragable: React.FC<IDragableProps> = ({ disabled, type }) => {
             const hoverClientY = clientOffset && hoverRect ? clientOffset.y - hoverRect.top : 0;
 
             if (hoverMiddleY > hoverClientY) {
-                dispatch(sortCanvas({ object: item.type, target: type, position: 'above' }));
+                dispatch(saveDndParams({ object: item.type, target: type, position: 'above' }));
             } else if (hoverMiddleY < hoverClientY) {
-                dispatch(sortCanvas({ object: item.type, target: type, position: 'below' }));
+                dispatch(saveDndParams({ object: item.type, target: type, position: 'below' }));
             }
         }
     }));

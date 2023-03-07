@@ -1,3 +1,4 @@
+import { checkDisplayRestrictions } from './../utils/rebuildArray';
 import { createSlice } from '@reduxjs/toolkit';
 import { rebuildArray } from '../utils/rebuildArray';
 import { elementTypes } from '../App.types';
@@ -5,7 +6,8 @@ import type { IRootSlice } from './rootSlice.types';
 
 const initialState: IRootSlice = {
     sidebar: [...Object.values(elementTypes)],
-    canvas: []
+    canvas: [],
+    dndParams: null
 };
 
 const rootSlice = createSlice({
@@ -13,16 +15,28 @@ const rootSlice = createSlice({
     initialState,
     reducers: {
         sortCanvas: (state, action) => {
-            const { object, target, position } = action.payload;
-            const newCanvas = rebuildArray(state.canvas, object, target, position);
-            if (newCanvas) {
-                state.canvas = newCanvas;
+            if (state.dndParams?.target) {
+                const { object, target, position } = state.dndParams;
+                const newCanvas = rebuildArray(state.canvas, object, target, position);
+                if (newCanvas) {
+                    state.canvas = newCanvas;
+                }
+                state.dndParams = null;
+            } else {
+                const { object } = action.payload;
+                const newCanvas = rebuildArray(state.canvas, object);
+                if (newCanvas) {
+                    state.canvas = newCanvas;
+                }
             }
+        },
+        saveDndParams: (state, action) => {
+            state.dndParams = action.payload;
         }
     }
 });
 
 const rootReducer = rootSlice.reducer;
-export const { sortCanvas } = rootSlice.actions;
+export const { sortCanvas, saveDndParams } = rootSlice.actions;
 
 export default rootReducer;

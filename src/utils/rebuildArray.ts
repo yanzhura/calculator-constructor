@@ -27,15 +27,26 @@ export const rebuildArray: TRebuildArrayFn = (array, object, target, position) =
     if (!array.includes(object) && !target) {
         const newArray = [...array];
         newArray.push(object);
-        return newArray;
+        if (checkDisplayRestrictions(newArray)) {
+            return newArray;
+        }
+        return undefined;
     }
 
     if (!array.includes(object) && target) {
-        return insertAtPosition(array, object, target, position);
+        const newArray = insertAtPosition(array, object, target, position);
+        if (checkDisplayRestrictions(newArray)) {
+            return newArray;
+        }
+        return undefined;
     }
 
     if (array.includes(object) && target) {
         const withDeletedObject = array.filter((el) => el !== object);
-        return insertAtPosition(withDeletedObject, object, target, position);
+        const newArray = insertAtPosition(withDeletedObject, object, target, position);
+        if (checkDisplayRestrictions(newArray)) {
+            return newArray;
+        }
+        return undefined;
     }
 };
