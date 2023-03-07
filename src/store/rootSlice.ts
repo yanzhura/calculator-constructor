@@ -1,4 +1,3 @@
-import { checkDisplayRestrictions } from './../utils/rebuildArray';
 import { createSlice } from '@reduxjs/toolkit';
 import { rebuildArray } from '../utils/rebuildArray';
 import { elementTypes } from '../App.types';
@@ -32,11 +31,14 @@ const rootSlice = createSlice({
         },
         saveDndParams: (state, action) => {
             state.dndParams = action.payload;
+        },
+        removeFromCanvas: (state, action) => {
+            state.canvas = state.canvas.filter((el) => el !== action.payload);
         }
     }
 });
 
 const rootReducer = rootSlice.reducer;
-export const { sortCanvas, saveDndParams } = rootSlice.actions;
+export const { sortCanvas, saveDndParams, removeFromCanvas } = rootSlice.actions;
 
 export default rootReducer;
