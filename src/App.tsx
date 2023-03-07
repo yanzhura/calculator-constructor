@@ -3,12 +3,18 @@ import useAppSelector from './hooks/use-app-selector';
 import Sidebar from './components/Sidebar/Sidebar';
 import Canvas from './components/Canvas/Canvas';
 import Dragable from './components/Dragable/Dragable';
-import { TRenderElements } from './App.types';
+import { elementTypes, TRenderElements } from './App.types';
 import * as S from './App.styles';
+import useAppDispatch from './hooks/use-app-dispatch';
+import { removeFromCanvas } from './store/rootSlice';
 
 const App: React.FC = () => {
     const { canvas } = useAppSelector((state) => state);
     const { sidebar } = useAppSelector((state) => state);
+
+    const dispatch = useAppDispatch();
+
+    const removeHandler = (type: elementTypes) => dispatch(removeFromCanvas(type));
 
     const renderSidebar: TRenderElements = (elements) => {
         return elements.map((el) => {
@@ -19,7 +25,7 @@ const App: React.FC = () => {
 
     const renderCanvas: TRenderElements = (elements) => {
         return elements.map((el) => {
-            return <Dragable key={el} type={el} />;
+            return <Dragable key={el} type={el} {...{ removeHandler }} />;
         });
     };
 

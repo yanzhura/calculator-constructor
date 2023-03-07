@@ -9,7 +9,7 @@ import Keyboard from '../Calculator/Keyboard/Keyboard';
 import Operators from '../Calculator/Operators/Operators';
 import { IDragableProps } from './Dragable.types';
 
-const Dragable: React.FC<IDragableProps> = ({ disabled, type }) => {
+const Dragable: React.FC<IDragableProps> = ({ disabled, removeHandler, type }) => {
     const ref = useRef<HTMLDivElement>(null);
 
     const dispatch = useAppDispatch();
@@ -68,7 +68,7 @@ const Dragable: React.FC<IDragableProps> = ({ disabled, type }) => {
     drag(drop(ref));
 
     return (
-        <div draggable={!disabled} ref={ref}>
+        <div draggable={!disabled} ref={ref} onDoubleClick={() => removeHandler && removeHandler(type)}>
             {getComponent(type)}
         </div>
     );
