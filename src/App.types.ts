@@ -13,3 +13,9 @@ export type TGetComponent = (name: string) => React.ReactNode;
 export interface ICalcBaseElement {
     disabled?: boolean;
 }
+
+export interface IItem {
+    type: string;
+}
+
+export type TPosition = 'above' | 'below';

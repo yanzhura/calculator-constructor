@@ -1,17 +1,19 @@
 import React from 'react';
 import { useDrop } from 'react-dnd/dist/hooks/useDrop';
-import { elementTypes } from '../../App.types';
+import { elementTypes, IItem } from '../../App.types';
 import useAppDispatch from '../../hooks/use-app-dispatch';
-import type { ICanvasProps, IItem } from './Canvas.types';
-import { dropToCanvas } from '../../store/rootSlice';
+import type { ICanvasProps } from './Canvas.types';
 import * as S from './Canvas.styles';
+import { sortCanvas } from '../../store/rootSlice';
 
 const Canvas: React.FC<ICanvasProps> = ({ children }) => {
     const dispatch = useAppDispatch();
 
-    const [, drop] = useDrop(() => ({
+    const [, drop] = useDrop<IItem>(() => ({
         accept: [...Object.values(elementTypes)],
-        drop: (item: IItem) => dispatch(dropToCanvas(item.type))
+        drop: (item) => {
+            dispatch(sortCanvas({ object: item.type }));
+        }
     }));
 
     return <S.Wrapper ref={drop}>{children}</S.Wrapper>;

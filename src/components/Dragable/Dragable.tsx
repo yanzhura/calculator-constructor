@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd/dist/hooks';
-import { elementTypes, TGetComponent } from '../../App.types';
+import { elementTypes, IItem, TGetComponent } from '../../App.types';
+import useAppDispatch from '../../hooks/use-app-dispatch';
+import { sortCanvas } from '../../store/rootSlice';
 import Display from '../Calculator/Display/Display';
 import Equals from '../Calculator/Equals/Equals';
 import Keyboard from '../Calculator/Keyboard/Keyboard';
@@ -9,6 +11,8 @@ import { IDragableProps } from './Dragable.types';
 
 const Dragable: React.FC<IDragableProps> = ({ disabled, type }) => {
     const ref = useRef<HTMLDivElement>(null);
+
+    const dispatch = useAppDispatch();
 
     const [, drag] = useDrag(() => ({
         type: type,
@@ -34,18 +38,29 @@ const Dragable: React.FC<IDragableProps> = ({ disabled, type }) => {
         }
     };
 
-    const [, drop] = useDrop(() => ({
-        accept: [elementTypes.DISPLAY, elementTypes.KEYBOARD],
+    const [, drop] = useDrop<IItem>(() => ({
+        accept: [...Object.values(elementTypes)],
         hover: (item, monitor) => {
+            // const hoverRect = ref.current?.getBoundingClientRect();
+            // const hoverMiddleY = hoverRect ? (hoverRect.bottom - hoverRect.top) / 2 : 0;
+            // const clientOffset = monitor.getClientOffset();
+            // const hoverClientY = clientOffset && hoverRect ? clientOffset.y - hoverRect.top : 0;
+            // if (hoverMiddleY > hoverClientY) {
+            //     dispatch(setDropPosition('above'));
+            // } else if (hoverMiddleY < hoverClientY) {
+            //     dispatch(setDropPosition('below'));
+            // }
+        },
+        drop: (item, monitor) => {
             const hoverRect = ref.current?.getBoundingClientRect();
             const hoverMiddleY = hoverRect ? (hoverRect.bottom - hoverRect.top) / 2 : 0;
             const clientOffset = monitor.getClientOffset();
             const hoverClientY = clientOffset && hoverRect ? clientOffset.y - hoverRect.top : 0;
 
-            if (hoverClientY < hoverMiddleY) {
-                console.log('up');
-            } else if (hoverClientY > hoverMiddleY) {
-                console.log('down');
+            if (hoverMiddleY > hoverClientY) {
+                dispatch(sortCanvas({ object: item.type, target: type, position: 'above' }));
+            } else if (hoverMiddleY < hoverClientY) {
+                dispatch(sortCanvas({ object: item.type, target: type, position: 'below' }));
             }
         }
     }));
