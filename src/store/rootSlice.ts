@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { moveToPosition } from './../utils/moveInArray';
+import { rebuildArray } from '../utils/rebuildArray';
 import { elementTypes } from '../App.types';
 import type { IRootSlice } from './rootSlice.types';
 
@@ -14,8 +14,10 @@ const rootSlice = createSlice({
     reducers: {
         sortCanvas: (state, action) => {
             const { object, target, position } = action.payload;
-            const newCanvas = moveToPosition(state.canvas, object, target, position);
-            state.canvas = newCanvas;
+            const newCanvas = rebuildArray(state.canvas, object, target, position);
+            if (newCanvas) {
+                state.canvas = newCanvas;
+            }
         }
     }
 });
