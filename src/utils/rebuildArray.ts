@@ -1,13 +1,7 @@
-import { TPosition, elementTypes } from '../App.types';
+import { TInsertAtPositionFn, TCheckDisplayRestrictionsFn, TRebuildArrayFn } from './rebuildArrays.types';
+import { elementTypes } from '../App.types';
 
-type IRebuildArrayFn = (
-    array: elementTypes[],
-    object: elementTypes,
-    target?: elementTypes,
-    position?: TPosition
-) => elementTypes[] | undefined;
-
-const insertAtPosition: IRebuildArrayFn = (array, object, target, position) => {
+const insertAtPosition: TInsertAtPositionFn = (array, object, target, position) => {
     const newArray = array.flatMap((el) => {
         if (el === target) {
             if (position === 'above') {
@@ -22,15 +16,24 @@ const insertAtPosition: IRebuildArrayFn = (array, object, target, position) => {
     return newArray;
 };
 
-export const rebuildArray: IRebuildArrayFn = (array, object, target, position) => {
+export const checkDisplayRestrictions: TCheckDisplayRestrictionsFn = (array) => {
+    if (array.includes(elementTypes.DISPLAY) && array[0] !== elementTypes.DISPLAY) {
+        return false;
+    }
+    return true;
+};
+
+export const rebuildArray: TRebuildArrayFn = (array, object, target, position) => {
     if (!array.includes(object) && !target) {
         const newArray = [...array];
         newArray.push(object);
         return newArray;
     }
+
     if (!array.includes(object) && target) {
         return insertAtPosition(array, object, target, position);
     }
+
     if (array.includes(object) && target) {
         const withDeletedObject = array.filter((el) => el !== object);
         return insertAtPosition(withDeletedObject, object, target, position);
